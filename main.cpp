@@ -28,6 +28,7 @@ void find_goat(const list<Goat> &trip);
 void find_youngest_goat(const list<Goat> &trip);
 void find_oldest_goat(const list<Goat> &trip);
 void check_all_goats(const list<Goat> &trip);
+void check_goat_color(const list<Goat> &trip);
 int main_menu();
 
 int main() {
@@ -68,7 +69,7 @@ int main() {
   // Goat Manager menu
   int sel = main_menu();
 
-  while (sel != 9) {
+  while (sel != 10) {
     switch (sel) {
       case 1:
         cout << "Adding a goat.\n";
@@ -105,6 +106,10 @@ int main() {
         check_all_goats(trip);
         break;
 
+      case 9:
+        check_goat_color(trip);
+        break;
+
       default:
         cout << "Invalid selection.\n";
         break;
@@ -126,13 +131,14 @@ int main_menu() {
   cout << "[6] Find the youngest goat\n";
   cout << "[7] Find the oldest goat\n";
   cout << "[8] Check if all goats are older than 5\n";
-  cout << "[9] Quit\n";
+  cout << "[9] Check if any goat has a selected color\n";
+  cout << "[10] Quit\n";
   cout << "Choice --> ";
 
   int choice;
   cin >> choice;
 
-  while (choice < 1 || choice > 9) {
+  while (choice < 1 || choice > 10) {
     cout << "Invalid, again --> ";
     cin >> choice;
   }
@@ -221,6 +227,27 @@ void check_all_goats(const list<Goat> &trip) {
     cout << "Yes, all goats are older than 5.\n";
   } else {
     cout << "No, not all goats are older than 5.\n";
+  }
+}
+
+void check_goat_color(const list<Goat> &trip) {
+  // Check if at least one goat matches the selected color
+  string color;
+
+  cout << "Enter goat color: ";
+  cin >> color;
+
+  bool found = any_of(trip.begin(), trip.end(),
+    [color](const Goat &g) {
+      return g.get_color() == color;
+    });
+
+  if (found) {
+    cout << "Yes, a goat with color " << color
+         << " exists.\n";
+  } else {
+    cout << "No goats with color " << color
+         << " found.\n";
   }
 }
 
