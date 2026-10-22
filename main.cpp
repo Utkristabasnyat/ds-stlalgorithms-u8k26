@@ -11,6 +11,7 @@
 #include <iomanip>
 #include <list>
 #include <algorithm>
+#include <numeric>
 #include <cstdlib>
 #include <ctime>
 #include "Goat.h"
@@ -29,6 +30,7 @@ void find_youngest_goat(const list<Goat> &trip);
 void find_oldest_goat(const list<Goat> &trip);
 void check_all_goats(const list<Goat> &trip);
 void check_goat_color(const list<Goat> &trip);
+void total_goat_ages(const list<Goat> &trip);
 int main_menu();
 
 int main() {
@@ -69,7 +71,7 @@ int main() {
   // Goat Manager menu
   int sel = main_menu();
 
-  while (sel != 10) {
+  while (sel != 11) {
     switch (sel) {
       case 1:
         cout << "Adding a goat.\n";
@@ -110,6 +112,10 @@ int main() {
         check_goat_color(trip);
         break;
 
+      case 10:
+        total_goat_ages(trip);
+        break;
+
       default:
         cout << "Invalid selection.\n";
         break;
@@ -132,13 +138,14 @@ int main_menu() {
   cout << "[7] Find the oldest goat\n";
   cout << "[8] Check if all goats are older than 5\n";
   cout << "[9] Check if any goat has a selected color\n";
-  cout << "[10] Quit\n";
+  cout << "[10] Calculate total goat ages\n";
+  cout << "[11] Quit\n";
   cout << "Choice --> ";
 
   int choice;
   cin >> choice;
 
-  while (choice < 1 || choice > 10) {
+  while (choice < 1 || choice > 11) {
     cout << "Invalid, again --> ";
     cin >> choice;
   }
@@ -249,6 +256,16 @@ void check_goat_color(const list<Goat> &trip) {
     cout << "No goats with color " << color
          << " found.\n";
   }
+}
+
+void total_goat_ages(const list<Goat> &trip) {
+  // Add the ages of all goats using accumulate
+  int total = accumulate(trip.begin(), trip.end(), 0,
+    [](int sum, const Goat &g) {
+      return sum + g.get_age();
+    });
+
+  cout << "Total age of all goats: " << total << endl;
 }
 
 void delete_goat(list<Goat> &trip) {
