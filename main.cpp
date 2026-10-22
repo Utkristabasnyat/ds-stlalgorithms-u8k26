@@ -12,6 +12,7 @@
 #include <list>
 #include <algorithm>
 #include <numeric>
+#include <iterator>
 #include <cstdlib>
 #include <ctime>
 #include "Goat.h"
@@ -31,6 +32,7 @@ void find_oldest_goat(const list<Goat> &trip);
 void check_all_goats(const list<Goat> &trip);
 void check_goat_color(const list<Goat> &trip);
 void total_goat_ages(const list<Goat> &trip);
+void display_older_goats(const list<Goat> &trip);
 int main_menu();
 
 int main() {
@@ -71,7 +73,7 @@ int main() {
   // Goat Manager menu
   int sel = main_menu();
 
-  while (sel != 11) {
+  while (sel != 12) {
     switch (sel) {
       case 1:
         cout << "Adding a goat.\n";
@@ -116,6 +118,10 @@ int main() {
         total_goat_ages(trip);
         break;
 
+      case 11:
+        display_older_goats(trip);
+        break;
+
       default:
         cout << "Invalid selection.\n";
         break;
@@ -139,13 +145,14 @@ int main_menu() {
   cout << "[8] Check if all goats are older than 5\n";
   cout << "[9] Check if any goat has a selected color\n";
   cout << "[10] Calculate total goat ages\n";
-  cout << "[11] Quit\n";
+  cout << "[11] Display goats older than 10\n";
+  cout << "[12] Quit\n";
   cout << "Choice --> ";
 
   int choice;
   cin >> choice;
 
-  while (choice < 1 || choice > 11) {
+  while (choice < 1 || choice > 12) {
     cout << "Invalid, again --> ";
     cin >> choice;
   }
@@ -259,13 +266,32 @@ void check_goat_color(const list<Goat> &trip) {
 }
 
 void total_goat_ages(const list<Goat> &trip) {
-  // Add the ages of all goats using accumulate
+  // Add all goat ages
   int total = accumulate(trip.begin(), trip.end(), 0,
     [](int sum, const Goat &g) {
       return sum + g.get_age();
     });
 
   cout << "Total age of all goats: " << total << endl;
+}
+
+void display_older_goats(const list<Goat> &trip) {
+  // Copy goats older than 10 into another list
+  list<Goat> olderGoats;
+
+  copy_if(trip.begin(), trip.end(),
+    back_inserter(olderGoats),
+    [](const Goat &g) {
+      return g.get_age() > 10;
+    });
+
+  if (olderGoats.empty()) {
+    cout << "No goats older than 10.\n";
+    return;
+  }
+
+  cout << "Goats older than 10:\n";
+  display_trip(olderGoats);
 }
 
 void delete_goat(list<Goat> &trip) {
