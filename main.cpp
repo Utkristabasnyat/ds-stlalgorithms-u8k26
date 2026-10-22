@@ -24,6 +24,7 @@ void delete_goat(list<Goat> &trip);
 void add_goat(list<Goat> &trip, string [], string []);
 void display_trip(list<Goat> trip);
 void count_older_goats(const list<Goat> &trip);
+void find_goat(const list<Goat> &trip);
 int main_menu();
 
 int main() {
@@ -64,7 +65,7 @@ int main() {
   // Goat Manager menu
   int sel = main_menu();
 
-  while (sel != 5) {
+  while (sel != 6) {
     switch (sel) {
       case 1:
         cout << "Adding a goat.\n";
@@ -85,6 +86,10 @@ int main() {
         count_older_goats(trip);
         break;
 
+      case 5:
+        find_goat(trip);
+        break;
+
       default:
         cout << "Invalid selection.\n";
         break;
@@ -102,13 +107,14 @@ int main_menu() {
   cout << "[2] Delete a goat\n";
   cout << "[3] List goats\n";
   cout << "[4] Count goats older than 10\n";
-  cout << "[5] Quit\n";
+  cout << "[5] Find a goat by name\n";
+  cout << "[6] Quit\n";
   cout << "Choice --> ";
 
   int choice;
   cin >> choice;
 
-  while (choice < 1 || choice > 5) {
+  while (choice < 1 || choice > 6) {
     cout << "Invalid, again --> ";
     cin >> choice;
   }
@@ -117,13 +123,34 @@ int main_menu() {
 }
 
 void count_older_goats(const list<Goat> &trip) {
-  // Count goats whose age is greater than 10
+  // Count goats older than 10
   int count = count_if(trip.begin(), trip.end(),
     [](const Goat &g) {
       return g.get_age() > 10;
     });
 
   cout << "Goats older than 10: " << count << endl;
+}
+
+void find_goat(const list<Goat> &trip) {
+  // Search for a goat using find_if
+  string name;
+
+  cout << "Enter goat name: ";
+  cin >> name;
+
+  auto it = find_if(trip.begin(), trip.end(),
+    [name](const Goat &g) {
+      return g.get_name() == name;
+    });
+
+  if (it != trip.end()) {
+    cout << "Goat found: " << it->get_name()
+         << " (" << it->get_age()
+         << ", " << it->get_color() << ")\n";
+  } else {
+    cout << name << " not found.\n";
+  }
 }
 
 void delete_goat(list<Goat> &trip) {
