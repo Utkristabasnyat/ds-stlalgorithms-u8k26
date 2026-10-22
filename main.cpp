@@ -26,6 +26,7 @@ void display_trip(list<Goat> trip);
 void count_older_goats(const list<Goat> &trip);
 void find_goat(const list<Goat> &trip);
 void find_youngest_goat(const list<Goat> &trip);
+void find_oldest_goat(const list<Goat> &trip);
 int main_menu();
 
 int main() {
@@ -66,7 +67,7 @@ int main() {
   // Goat Manager menu
   int sel = main_menu();
 
-  while (sel != 7) {
+  while (sel != 8) {
     switch (sel) {
       case 1:
         cout << "Adding a goat.\n";
@@ -95,6 +96,10 @@ int main() {
         find_youngest_goat(trip);
         break;
 
+      case 7:
+        find_oldest_goat(trip);
+        break;
+
       default:
         cout << "Invalid selection.\n";
         break;
@@ -114,13 +119,14 @@ int main_menu() {
   cout << "[4] Count goats older than 10\n";
   cout << "[5] Find a goat by name\n";
   cout << "[6] Find the youngest goat\n";
-  cout << "[7] Quit\n";
+  cout << "[7] Find the oldest goat\n";
+  cout << "[8] Quit\n";
   cout << "Choice --> ";
 
   int choice;
   cin >> choice;
 
-  while (choice < 1 || choice > 7) {
+  while (choice < 1 || choice > 8) {
     cout << "Invalid, again --> ";
     cin >> choice;
   }
@@ -172,6 +178,23 @@ void find_youngest_goat(const list<Goat> &trip) {
     });
 
   cout << "Youngest goat: " << it->get_name()
+       << " (" << it->get_age()
+       << ", " << it->get_color() << ")\n";
+}
+
+void find_oldest_goat(const list<Goat> &trip) {
+  // Find the goat with the highest age
+  if (trip.empty()) {
+    cout << "No goats available.\n";
+    return;
+  }
+
+  auto it = max_element(trip.begin(), trip.end(),
+    [](const Goat &a, const Goat &b) {
+      return a.get_age() < b.get_age();
+    });
+
+  cout << "Oldest goat: " << it->get_name()
        << " (" << it->get_age()
        << ", " << it->get_color() << ")\n";
 }
